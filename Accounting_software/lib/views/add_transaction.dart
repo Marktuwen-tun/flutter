@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddTransaction extends StatefulWidget {
-  final Function(String, double) addTx;
+  final Function(String, double, String) addTx;
 
   const AddTransaction({super.key, required this.addTx});
 
@@ -12,6 +12,9 @@ class AddTransaction extends StatefulWidget {
 class _AddTransactionState extends State<AddTransaction> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
+  String _selectedCategory = '饮食';
+
+  final List<String> _categories = ['饮食', '交通', '娱乐', '购物', '医疗', '其他'];
 
   void submitData() {
     final enteredTitle = titleController.text;
@@ -19,8 +22,8 @@ class _AddTransactionState extends State<AddTransaction> {
 
     if (enteredTitle.isEmpty || enteredAmount <= 0) return;
 
-    widget.addTx(enteredTitle, enteredAmount);
-    Navigator.of(context).pop(); // 关闭弹出框
+    widget.addTx(enteredTitle, enteredAmount, _selectedCategory);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -39,6 +42,20 @@ class _AddTransactionState extends State<AddTransaction> {
               controller: amountController,
               keyboardType: TextInputType.number,
               onSubmitted: (_) => submitData(),
+            ),
+            DropdownButton<String>(
+              value: _selectedCategory,
+              onChanged: (newValue) {
+                setState(() {
+                  _selectedCategory = newValue!;
+                });
+              },
+              items: _categories.map((category) {
+                return DropdownMenuItem(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
             ),
             ElevatedButton(
               onPressed: submitData,

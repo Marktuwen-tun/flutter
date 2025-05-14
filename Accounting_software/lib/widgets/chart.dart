@@ -28,30 +28,32 @@ class Chart extends StatelessWidget {
     }).reversed.toList();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final data = groupedTransactionValues
-        .map((e) => charts.SeriesDatum(
-              '支出',
-              e['day'] as String,
-              e['amount'] as double,
-            ))
-        .toList();
+ @override
+Widget build(BuildContext context) {
+  final data = groupedTransactionValues;
 
-    return SizedBox(
-      height: 200,
-      child: charts.BarChart(
-        [
-          charts.Series<Map<String, Object>, String>(
-            id: '支出',
-            domainFn: (Map<String, Object> tx, _) => tx['day'] as String,
-            measureFn: (Map<String, Object> tx, _) => tx['amount'] as double,
-            data: groupedTransactionValues,
-            colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          )
-        ],
-        animate: true,
+  return Card(
+    elevation: 5,
+    margin: const EdgeInsets.all(10),
+    child: Padding(
+      padding: const EdgeInsets.all(10),
+      child: SizedBox(
+        height: 200,
+        child: charts.BarChart(
+          [
+            charts.Series<Map<String, Object>, String>(
+              id: '支出',
+              colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+              domainFn: (e, _) => e['day'] as String,
+              measureFn: (e, _) => e['amount'] as double,
+              data: data,
+            ),
+          ],
+          animate: true,
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
